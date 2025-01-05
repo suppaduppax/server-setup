@@ -7,6 +7,6 @@ Script to automate basic server setup such including
 ## Run script
 ```bash
 sudo apt -y upgrade && sudo apt install wget
-wget -O - https://raw.githubusercontent.com/suppaduppax/server-setup/refs/heads/main/server_setup.sh
+wget https://raw.githubusercontent.com/suppaduppax/server-setup/refs/heads/main/server_setup.sh
 bash server_setup.sh
 ```
