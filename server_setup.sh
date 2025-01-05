@@ -30,21 +30,21 @@ IF_CIDR="24"
 # yes-no confirmation prompt
 confirm() {
   while true; do
-    echo -n "${1} ["
+    PROMPT="${1} ["
     if [[ "${2}" = "y" ]]; then
-      echo -n "Y"
+      PROMPT="${PROMPT}Y"
     else
-      echo -n "y"
+      PROMPT="${PROMPT}y"
     fi
-    echo -n "/"
+    PROMPT="${PROMPT}/"
     if [[ "${2}" = "n" ]]; then
-      echo -n "N"
+      PROMPT="${PROMPT}N"
     else
-      echo -n "n"
+      PROMPT="${PROMPT}n"
     fi
 
-    echo -n "] "
-    read -n 1 YESNO
+    PROMPT="${PROMPT}] "
+    read -p "${PROMPT}" -n 1 -e YESNO
     echo
 
     if [[ "${YESNO}" = "y" ]]; then
