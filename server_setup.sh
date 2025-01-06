@@ -1,4 +1,4 @@
-# https://github.com/suppaduppax/server-setup
+  GNU nano 7.2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         server_setup.sh                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  # https://github.com/suppaduppax/server-setup
 # -------------------------------------------
 # Script to automate basic server setup such including
 # - tmuxrc
@@ -182,9 +182,13 @@ setup_sshkeys() {
     confirm "Would you like to use an existing key?" "n"
     if [ $? -eq 1 ]; then
       read -p "Enter id_rsa: " -e PRIVATE_KEY
+      if [ ! -d "${HOME}/.ssh" ]; then
+        mkdir "${HOME}/.ssh"
+      fi
+
       echo "${PRIVATE_KEY}" > "${HOME}/.ssh/id_rsa"
       chmod 600 "${HOME}/.ssh/id_rsa"
-      
+
       read -p "Enter id_rsa.pub: " -e PUBLIC_KEY
       echo "${PUBLIC_KEY}" > "${HOME}/.ssh/id_rsa.pub"
       chmod 644 "${HOME}/.ssh/id_rsa.pub"
