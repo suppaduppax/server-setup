@@ -180,7 +180,7 @@ setup_sshkeys() {
     echo "SSH key already in system. Skipping..."
   else
     confirm "Would you like to use an existing key?" "n"
-    if [ $? -eq 1]; then
+    if [ $? -eq 1 ]; then
       read -p "Enter id_rsa: " -e PRIVATE_KEY
       echo "${PRIVATE_KEY}" > "${HOME}/.ssh/id_rsa"
       chmod 600 "${HOME}/.ssh/id_rsa"
