@@ -174,10 +174,31 @@ setup_ip_debian() {
   fi
 }
 
+setup_sshkeys() {
+  echo "Generating ssh keys..."
+  if [ -f "${HOME}/.ssh/id_rsa ]; then
+    echo "SSH key already in system. Skipping..."
+  else
+    confirm "Would you like to use an existing key?" "n"
+    if [ $? -eq 1]; then
+      read -p "Enter id_rsa: " -e PRIVATE_KEY
+      echo "${PRIVATE_KEY}" > "${HOME}/.ssh/id_rsa"
+      chmod 600 "${HOME}/.ssh/id_rsa"
+      
+      read -p "Enter id_rsa.pub: " -e PUBLIC_KEY
+      echo "${PUBLIC_KEY}" > "${HOME}/.ssh/id_rsa.pub"
+      chmod 644 "${HOME}/.ssh/id_rsa.pub"
+    else
+      ssh-keygen
+    fi
+  fi
+}
+
 main() {
   setup_nanorc
-  setup_git
   setup_tmuxrc
+  setup_sshkeys
+  setup_git
   setup_ip
 }
 
