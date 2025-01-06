@@ -176,7 +176,7 @@ setup_ip_debian() {
 
 setup_sshkeys() {
   echo "Generating ssh keys..."
-  if [ -f "${HOME}/.ssh/id_rsa ]; then
+  if [ -f "${HOME}/.ssh/id_rsa" ]; then
     echo "SSH key already in system. Skipping..."
   else
     confirm "Would you like to use an existing key?" "n"
