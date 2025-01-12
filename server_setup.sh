@@ -113,49 +113,50 @@ setup_ip() {
   echo "Setting up host ip..."
   while true; do
     confirm "Would you like to setup a static ip?" "y"
-    if [ $? -eq 1 ]; then
-      read -p "Enter new ip: " -e NEW_IP
-      OCTET=$(echo "${NEW_IP}" | grep -oe "[0-9]*[.][0-9]*[.][0-9]*[.][0-9]*")
-      INVALID_CHAR=$(echo "${NEW_IP}" | grep -oe "[^0-9./]")
-      if [ -z "${OCTET}" ]; then
-        echo "Invalid ip: '${NEW_IP}'"
-        continue
-      fi
-      if [ ! -z "${INVALID_CHAR}" ] ; then
-        echo "Invalid character: '${INVALID_CHAR}'"
-        continue
-      fi
-      IF_ADDRESS="${NEW_IP}"
-      IF_CIDR=$(echo ${NEW_IP} | grep -oe "/[0-9]*")
-  
-      if [ -z "${IF_CIDR}" ]; then
-        while true; do
-          read -p "Enter CIDR [24]: " -e IF_CIDR
-          if [ -z "${IF_CIDR}" ]; then
-            IF_CIDR="${DEFAULT_CIDR}"
-          fi
-          INVALID_CHAR=$(echo "${IF_CIDR}" | grep -oe "[^0-9]*")
-          IF_CIDR=$(echo "${IF_CIDR}" | grep -oe "[0-9]*")
-          if [ ! -z "${INVALID_CHAR}" ] ; then
-            echo "Invalid character: '${INVALID_CHAR}'"
-            continue
-          fi
-          if [ -z "${IF_CIDR}" ]; then
-            echo "Invalid CIDR: '${IF_CIDR}'"
-            continue
-          fi
-          IF_ADDRESS="${NEW_IP}/${IF_CIDR}"
-          break
-        done
-      else
-        echo "Using default dhcp '${get_current_ip}'"
-      fi
+    if [ $? -eq 0 ]; then
+      echo "Using default dhcp '${get_current_ip}'"
+      return 1
     fi
+    
+    read -p "Enter new ip: " -e NEW_IP
+    OCTET=$(echo "${NEW_IP}" | grep -oe "[0-9]*[.][0-9]*[.][0-9]*[.][0-9]*")
+    INVALID_CHAR=$(echo "${NEW_IP}" | grep -oe "[^0-9./]")
+    if [ -z "${OCTET}" ]; then
+      echo "Invalid ip: '${NEW_IP}'"
+      continue
+    fi
+    if [ ! -z "${INVALID_CHAR}" ] ; then
+      echo "Invalid character: '${INVALID_CHAR}'"
+      continue
+    fi
+    IF_ADDRESS="${NEW_IP}"
+    IF_CIDR=$(echo ${NEW_IP} | grep -oe "/[0-9]*")
 
-    confirm "Use ip address: '${IF_ADDRESS}'" "n"
-    if [ $? -eq 1 ]; then
-      break
+    if [ -z "${IF_CIDR}" ]; then
+      while true; do
+        read -p "Enter CIDR [24]: " -e IF_CIDR
+        if [ -z "${IF_CIDR}" ]; then
+          IF_CIDR="${DEFAULT_CIDR}"
+        fi
+        INVALID_CHAR=$(echo "${IF_CIDR}" | grep -oe "[^0-9]*")
+        IF_CIDR=$(echo "${IF_CIDR}" | grep -oe "[0-9]*")
+        if [ ! -z "${INVALID_CHAR}" ] ; then
+          echo "Invalid character: '${INVALID_CHAR}'"
+          continue
+        fi
+        if [ -z "${IF_CIDR}" ]; then
+          echo "Invalid CIDR: '${IF_CIDR}'"
+          continue
+        fi
+        IF_ADDRESS="${NEW_IP}/${IF_CIDR}"
+        break
+      done
     fi
+  confirm "Use ip address: '${IF_ADDRESS}'" "n"
+  if [ $? -eq 1 ]; then
+    break
+  fi
+    
   done
   IF_CONTENT="${GENERATED_HEADER}
 auto ens192
