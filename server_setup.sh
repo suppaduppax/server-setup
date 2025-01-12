@@ -1,5 +1,3 @@
-  GNU nano 7.2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         server_setup.sh                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  # https://github.com/suppaduppax/server-setup
-# -------------------------------------------
 # Script to automate basic server setup such including
 # - tmuxrc
 # - nanorc
@@ -103,10 +101,6 @@ setup_tmuxrc() {
   ${HOME}/tmuxrc/install.sh
 }
 
-get_current_ip() {
-  echo "$(ip route | grep src | grep -oe "[0-9]*[.][0-9]*[.][0-9]*[.][0-9]*[^0-9]*$")"
-}
-
 setup_ip() {
   . /etc/os-release
 
@@ -114,10 +108,11 @@ setup_ip() {
   while true; do
     confirm "Would you like to setup a static ip?" "y"
     if [ $? -eq 0 ]; then
-      echo "Using default dhcp '${get_current_ip}'"
+      CURRENT_IP="$(ip route | grep src | grep -oe '[0-9]*[.][0-9]*[.][0-9]*[.][0-9]*[^0-9]*$' | grep -oe '[0-9]*[.][0-9]*[.][0-9]*[.][0-9]*' )"
+      echo "Using default dhcp '${CURRENT_IP}'"
       return 1
     fi
-    
+
     read -p "Enter new ip: " -e NEW_IP
     OCTET=$(echo "${NEW_IP}" | grep -oe "[0-9]*[.][0-9]*[.][0-9]*[.][0-9]*")
     INVALID_CHAR=$(echo "${NEW_IP}" | grep -oe "[^0-9./]")
@@ -156,7 +151,7 @@ setup_ip() {
   if [ $? -eq 1 ]; then
     break
   fi
-    
+
   done
   IF_CONTENT="${GENERATED_HEADER}
 auto ens192
@@ -215,5 +210,3 @@ main() {
   setup_git
   setup_ip
 }
-
-main
